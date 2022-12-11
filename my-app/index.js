@@ -7,17 +7,23 @@ const url = "https://www.tvguia.es/tv/programacion-la-1"
 
 const App = express();
 
+const canales = {}
+
 axios(url,{ 
     headers: { "Accept-Encoding": "gzip,deflate,compress" } 
 }).then(response =>{
     const html = response.data
     const $ = cheerio.load(html)
-    const canales = []
-    $(".block-channel-programs-div-title a", html).each(function(){
-        const canal=$(this).text()
-        canales.push(canal)
+    $(".block-channel-programs-div-title", html).each(function(){
+        const canal = $(this).text()
+        const canalUrl=$(this).find("a").attr("href")
+        console.log(canal)
+        canales[canal] = url+canalUrl
+        
     })
     console.log(canales)
+}).then(()=>{
+    
 })
 
 
