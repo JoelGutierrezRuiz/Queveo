@@ -34,16 +34,22 @@ axios(url,{
             const html = response.data
             const $ = cheerio.load(html)
     
-            $("h1",  html).each(function(){
-                const titulo = $(this).text()
-                allChannels.push(titulo)
+            $(".channel-row",  html).each(function(){
+                const titulo = $(this).find(".channel-programs-title a b").text()
+                const hora = $(this).find(".channel-programs-time a").text()
+                const category = $(this).find(".channel-programs-title span").text()
+                const sipnosis = $(this).find(".channel-programs-field_program_description_value a").text()
+                
+                allChannels.push({[titulo]:[hora,category,sipnosis]})
                 
             })
             
     
-            console.log(allChannels.length)
+            
+            
     
-        })
+        }).then(()=>{console.log(allChannels)})
+        
     }
 
     )
