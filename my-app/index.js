@@ -9,7 +9,7 @@ const App = express();
 
 //const canales = {}
 const canales  =[]
-const programacion = {}
+const allChannels = []
 axios(url,{ 
     headers: { "Accept-Encoding": "gzip,deflate,compress" } 
 }).then(response =>{
@@ -27,7 +27,7 @@ axios(url,{
 
 }).then(()=>{
     titulos = canales.map(canal=>{
-        const allChannels = []
+        
         axios(canal,{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         }).then(response=>{
@@ -41,7 +41,7 @@ axios(url,{
             })
             
     
-            console.log(allChannels)
+            console.log(allChannels.length)
     
         })
     }
