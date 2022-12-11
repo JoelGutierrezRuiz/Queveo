@@ -23,7 +23,7 @@ axios(url,{
         
         
     })
-    console.log(canales)
+
 
 }).then(()=>{
     
@@ -33,7 +33,7 @@ axios(url,{
         const html = response.data
         const $ = cheerio.load(html)
 
-        $("h1", html).each(function(){
+        $(".channel-programs-title a b", html).each(function(){
             const titulo = $(this).text()
             console.log(titulo)
             
