@@ -9,7 +9,7 @@ const App = express();
 
 //const canales = {}
 const canales  =[]
-
+const programacion = {}
 axios(url,{ 
     headers: { "Accept-Encoding": "gzip,deflate,compress" } 
 }).then(response =>{
@@ -26,23 +26,27 @@ axios(url,{
 
 
 }).then(()=>{
+    titulos = canales.map(canal=>{
+        const allChannels = []
+        axios(canal,{ 
+            headers: { "Accept-Encoding": "gzip,deflate,compress" } 
+        }).then(response=>{
+            const html = response.data
+            const $ = cheerio.load(html)
     
-    axios(canales[0],{ 
-        headers: { "Accept-Encoding": "gzip,deflate,compress" } 
-    }).then(response=>{
-        const html = response.data
-        const $ = cheerio.load(html)
-
-        $(".channel-programs-title a b", html).each(function(){
-            const titulo = $(this).text()
-            console.log(titulo)
+            $("h1",  html).each(function(){
+                const titulo = $(this).text()
+                allChannels.push(titulo)
+                
+            })
             
+    
+            console.log(allChannels)
+    
         })
+    }
 
-        
-
-    })
-
+    )
 })
 
 
