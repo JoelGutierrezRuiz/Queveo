@@ -7,7 +7,6 @@ const App = express();
 
 const url = "https://www.tvguia.es/tv/programacion-la-1"//url de incio
 const canales  =[]
-let allChannels = []
 
 //Hacemos primera busqueda de la página en si para sacar el Html
 axios(url,{ 
@@ -36,7 +35,6 @@ axios(url,{
     //Hacemos un map de cada canal para sacar por cada canal su programación
     titulos = 
     canales.map(canal=>{
-        
         //cada enlace de canal es analizado con axios para sacar el Html
         axios(canal,{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
@@ -56,12 +54,20 @@ axios(url,{
                 //sacamos el enlace del programa para acceder a su info completa
                 const titulo = $(this).attr("href")
                 //guardamos el enlace del programa con un enlace principal para que sea valido
-                allChannels.push("https://www.tvguia.es"+titulo)
+               
+                console.log( "https://www.tvguia.es"+titulo)
                 
-            })   
+            }) 
+            
+            
+            
+            
     
         })
+
     })
+
+   
 })
 
 
