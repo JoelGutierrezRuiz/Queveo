@@ -43,7 +43,7 @@ async function  SacarCanales()
 async function SacarProgramas(){
 
     const canales = await SacarCanales()
-    const programas =[]
+    const programas = {}
 
     canales.map(async canal=>{
         const response =await  axios(canal,{ 
@@ -57,7 +57,11 @@ async function SacarProgramas(){
         let programs = [] 
         $("#main",html).each(function(){
             channel= $(this).find("h1").text()
-            programas.push(channel)
+            channel= channel.replace("Programación","")
+            channel = channel.trim().toLowerCase()
+            
+            programas[channel] = html
+            
         })
        
        
@@ -71,12 +75,23 @@ async function SacarProgramas(){
     
 }
 
+const buscar = "pepe"
+
+function BuscarCanal (busquedaHtml){
+    try{
+        const $ = cheerio.load(busquedaHtml)
+    
+    
+    $(".channel-programs-title a b",busquedaHtml).each(function(){
+        const title = $(this).text()
+        console.log(title)
+    })
+    }catch{console.log("Este canal no existe")}
+}
 
 
 
-
-
-SacarProgramas().then(response=>{console.log(response.length)})
+SacarProgramas().then(response=>{BuscarCanal(response[buscar])})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
 
