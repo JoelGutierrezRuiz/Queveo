@@ -41,8 +41,10 @@ async function  SacarCanales()
 
 
 async function SacarProgramas(){
+
     const canales = await SacarCanales()
     const programas ={}
+
     canales.map(async canal=>{
         const response =await  axios(canal,{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
@@ -57,16 +59,29 @@ async function SacarProgramas(){
             channel= $(this).find("h1").text()
             
         })
-        $(".channel-programs-title a",html).each(function(){
+        $(".channel-programs-title a",html).each(async function(){
             const programa = "https://www.tvguia.es"+$(this).attr("href")
-            programs.push(programa)
+
+            const response= await axios(programa,{ 
+                headers: { "Accept-Encoding": "gzip,deflate,compress" } 
+            })
+
+            const html = response.data
+            const hola = cheerio.load(html)
+            hola(".program-title",html).each(function(){
+                const title = hola(this).text()
+                programs.push(title)
+            })
+
+
+            
             
         })
        programas[channel]= programs
        
 
     })
-    await sleep(2000)
+    await sleep(10000)
     return programas
     
    
@@ -75,8 +90,7 @@ async function SacarProgramas(){
 
 
 
-SacarProgramas().then(response=>{console.log(response[" Programación Telecinco"
-])})
+SacarProgramas().then(response=>{console.log(response[" Programación La 1"])})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
 
