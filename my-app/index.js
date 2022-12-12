@@ -3,6 +3,8 @@ const axios = require("axios")
 const express = require("express")
 const cheerio = require("cheerio");
 const { response } = require("express");
+const util = require("util")
+const sleep = util.promisify(setTimeout)
 //imports
 const App = express();
 
@@ -36,12 +38,13 @@ async function  SacarCanales()
     return canales
 }
 
+
+
 async function SacarProgramas(){
     const canales = await SacarCanales()
-    const programs= []
-    
-    for(let i=0; i<canales.length;i++){
-        const response =await  axios(canales[i],{ 
+    const programas = []
+    canales.map(async canal=>{
+        const response =await  axios(canal,{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         })
 
@@ -50,18 +53,20 @@ async function SacarProgramas(){
         const $ = cheerio.load(html)
         $(".channel-programs-title a",html).each(function(){
             const programa = $(this).attr("href")
-            programs.push(programa)
+            programas.push(programa)
         })
-    }
 
-    return programs
-
-
+    })
+    await sleep(7000)
+    return programas
     
+   
     
 }
-SacarProgramas().then((response)=>{console.log(response)})
 
+
+
+SacarProgramas().then(response=>{console.log(response.length)})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
 
