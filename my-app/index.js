@@ -2,8 +2,7 @@
 const axios = require("axios")
 const express = require("express")
 const cheerio = require("cheerio");
-const { response } = require("express");
-const util = require("util")
+const util = require("util");
 const sleep = util.promisify(setTimeout)
 //imports
 const App = express();
@@ -37,8 +36,6 @@ async function  SacarCanales()
     })
     return canales
 }
-
-
 
 async function SacarProgramas(){
 
@@ -74,27 +71,51 @@ async function SacarProgramas(){
    
     
 }
-
-const buscar = "pepe"
-
-function BuscarCanal (busquedaHtml){
+const buscar = "dark"
+async function BuscarCanal (busquedaHtml){
     try{
         const $ = cheerio.load(busquedaHtml)
+        const programas = []
     
-    
-    $(".channel-programs-title a b",busquedaHtml).each(function(){
-        const title = $(this).text()
-        console.log(title)
+    $(".channel-programs-title a",busquedaHtml).each(function(){
+        const title = "https://www.tvguia.es"+$(this).attr("href")
+        programas.push(title)
+
     })
+
+    return programas
+
     }catch{console.log("Este canal no existe")}
+
+    
 }
 
+async function BuscarProgramas (programasList){
+    const programas = {}
+    programasList.map(async programa=>{
 
+        const response =await axios(programa,{ 
+            headers: { "Accept-Encoding": "gzip,deflate,compress" } 
+        })
 
-SacarProgramas().then(response=>{BuscarCanal(response[buscar])})
+        const html = response.data
+        $ = cheerio.load(html)
+
+        $(".program-wrapper",html).each(function(){
+            const titulo = $(this).find(".program-title").text()
+            const categoria = $(this).find(".tvprogram").text()
+            const hora = $(this).find(".program-hour").text()
+            
+
+            programas[titulo]= [categoria,hora]
+        })
+    })
+    await sleep(1000)
+    return programas
+}
+
+SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response)})})})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
-
-
 
 
 
