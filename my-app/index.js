@@ -121,4 +121,19 @@ SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{
 
 
 
+//imdb
+
+axios("https://www.imdb.com/title/tt2005151/?ref_=nv_sr_srsg_1",{ 
+    headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
+}).then(response=>{
+    const html = response.data
+    const $ = cheerio.load(html)
+
+    $(".ipc-button__text",html).each(function(){
+        const puntuacion = $(this).find(".sc-7ab21ed2-1").text()
+        puntuacion.trim()?console.log(puntuacion):null
+    })
+})
+
+
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
