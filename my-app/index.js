@@ -71,7 +71,7 @@ async function SacarProgramas(){
    
     
 }
-const buscar = "fdf"
+const buscar = "be mad"
 async function BuscarCanal (busquedaHtml){
     try{
         const $ = cheerio.load(busquedaHtml)
@@ -111,11 +111,11 @@ async function BuscarProgramas (programasList){
 
         })
     })
-    await sleep(350)
+    await sleep(500)
     return programas
 }
 
-SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response.length)})})})
+SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response)})})})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
 
