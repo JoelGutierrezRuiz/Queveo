@@ -105,8 +105,9 @@ async function BuscarProgramas (programasList){
             const titulo = $(this).find(".program-title").text()
             const categoria = $(this).find(".tvprogram").text()
             const hora = $(this).find(".program-hour").text()
+            const sipnosis = $(this).find(".program-element p").text()
             
-            titulo.trim()?programas.push({[titulo]:[categoria,hora]}):null
+            titulo.trim()?programas.push({[titulo]:[categoria,hora,sipnosis]}):null
 
 
         })
