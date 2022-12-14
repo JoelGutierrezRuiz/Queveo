@@ -116,24 +116,27 @@ async function BuscarProgramas (programasList){
     return programas
 }
 
-SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response)})})})
+SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response.length)})})})
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
 
 
 //imdb
+const pelicula = "avatar"
 
-axios("https://www.imdb.com/title/tt2005151/?ref_=nv_sr_srsg_1",{ 
+axios(`https://www.imdb.com/find?q=${pelicula}&ref_=nv_sr_sm`,{ 
     headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
 }).then(response=>{
     const html = response.data
     const $ = cheerio.load(html)
 
-    $(".ipc-button__text",html).each(function(){
-        const puntuacion = $(this).find(".sc-7ab21ed2-1").text()
-        puntuacion.trim()?console.log(puntuacion):null
+    $(".ipc-metadata-list-summary-item__t",html).each(function(){
+        const peliculaUrl = $(this).text().trim()
+        peliculaUrl.toLocaleLowerCase()==pelicula?console.log(peliculaUrl.toLocaleLowerCase()):null
     })
 })
 
 
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
+
+//const puntuacion = $(this).find(".sc-7ab21ed2-1").text()
