@@ -122,24 +122,39 @@ SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{
 
 
 //imdb
-const pelicula = "time to kill"
 
-axios(`https://www.imdb.com/find?q=${pelicula}&ref_=nv_sr_sm`,{ 
-    headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
-}).then(response=>{
-    const html = response.data
-    const $ = cheerio.load(html)
+const nombre = "avatar"
 
-    $(".ipc-metadata-list-summary-item__t",html).each(function(){
-        let peliculaUrl = $(this).text().trim()
-        peliculaUrl.toLowerCase()==pelicula.toLowerCase().trim()?console.log(peliculaUrl):null
-        if(peliculaUrl.toLowerCase()==pelicula){
-            peliculaUrl=$(this).attr("href")
+async function BuscarImdb(film){
+
+    let resultado = null
+    const filtro = []
+
+    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
+        headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
+    }).then(response=>{
+        const html = response.data
+        const $ = cheerio.load(html)
+
+        $(".ipc-metadata-list-summary-item__t",html).each(function(){
+            let peliculaUrl = $(this).text().trim()
+            if(peliculaUrl.toLowerCase()==film.toLowerCase().trim()){
+                
+                filtro.push(peliculaUrl="https://www.imdb.com/"+$(this).attr("href"))
+                resultado = filtro
+
+                
+            }
             
-        }
-        
+        })
     })
-})
+
+    await sleep(1000)
+    return resultado
+
+}
+
+BuscarImdb(nombre).then(response=>{console.log(response)})
 
 
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
