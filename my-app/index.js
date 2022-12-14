@@ -122,7 +122,7 @@ SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{
 
 
 //imdb
-const pelicula = "avatar"
+const pelicula = "time to kill"
 
 axios(`https://www.imdb.com/find?q=${pelicula}&ref_=nv_sr_sm`,{ 
     headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
@@ -131,8 +131,13 @@ axios(`https://www.imdb.com/find?q=${pelicula}&ref_=nv_sr_sm`,{
     const $ = cheerio.load(html)
 
     $(".ipc-metadata-list-summary-item__t",html).each(function(){
-        const peliculaUrl = $(this).text().trim()
-        peliculaUrl.toLocaleLowerCase()==pelicula?console.log(peliculaUrl.toLocaleLowerCase()):null
+        let peliculaUrl = $(this).text().trim()
+        peliculaUrl.toLowerCase()==pelicula.toLowerCase().trim()?console.log(peliculaUrl):null
+        if(peliculaUrl.toLowerCase()==pelicula){
+            peliculaUrl=$(this).attr("href")
+            
+        }
+        
     })
 })
 
