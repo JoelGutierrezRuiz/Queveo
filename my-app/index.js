@@ -33,6 +33,7 @@ async function  SacarCanales()
             const canalUrl="https://www.tvguia.es"+$(this).find("a").attr("href")
             canales.push(canalUrl)
         })
+        console.log(canales)
     })
     return canales
 }
@@ -72,6 +73,7 @@ async function SacarProgramas(){
     
 }
 const buscar = "be mad"
+
 async function BuscarCanal (busquedaHtml){
     try{
         const $ = cheerio.load(busquedaHtml)
@@ -116,14 +118,18 @@ async function BuscarProgramas (programasList){
     return programas
 }
 
-SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{BuscarProgramas(response).then(response=>{console.log(response.length)})})})
+SacarCanales()
 //Una vez guarda la lista de de canales vamos a buscar su programación 
+
+
+
 
 
 
 //imdb
 
-const nombre = "amores perro"
+
+const nombre = "good will hunting"
 
 async function BuscarImdb(film){
 
@@ -167,7 +173,7 @@ async function BuscarImdb(film){
 
 }
 
-BuscarImdb(nombre)
+
 
 
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
