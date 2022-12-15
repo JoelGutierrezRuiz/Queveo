@@ -33,26 +33,31 @@ async function  SacarCanales()
             const canalUrl="https://www.tvguia.es"+$(this).find("a").attr("href")
             canales.push(canalUrl)
         })
-        console.log(canales)
     })
     return canales
 }
 
 async function SacarProgramas(){
-
+    //obtenemos el valor de la funcion sacarCanales (Array para map)
     const canales = await SacarCanales()
+    //Esta variable servirá para almacenar temporalmente los resultados
     const programas = {}
 
+    //Aqui mapeamos todas las urls de los canales
     canales.map(async canal=>{
+
+        //Sacamos el html de los canales cons async para evitar las dependencias de variables
         const response =await  axios(canal,{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         })
 
-
+        //Guardamos los datos de la respuesta de axios (html)
         const html = response.data
+        //Con esto podremos cargar y manipular el html
         const $ = cheerio.load(html)
+        //Esta variables es para almacenar temporalmente el nombre del canal
         let channel = null
-        let programs = [] 
+        //Buscamos el titulo del canal y guardamos su html para poder manipularlo sabiendo que canal es en un futuro 
         $("#main",html).each(function(){
             channel= $(this).find("h1").text()
             channel= channel.replace("Programación","")

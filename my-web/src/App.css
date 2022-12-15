@@ -1,0 +1,25 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/*App main*/
+.App{
+  width:100vw;
+  height: 100vh;
+  background-color: gray;
+}
+
+/*Header*/
+
+.main__header{
+  width: 100%;
+  height: 70px;
+  background-color: red;
+}
+
+.header-container{
+  width: 100%;
+  height:100%;
+}
