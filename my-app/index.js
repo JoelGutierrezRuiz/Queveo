@@ -112,7 +112,7 @@ async function BuscarProgramas (programasList){
 
         })
     })
-    await sleep(500)
+    await sleep(1500)
     return programas
 }
 
@@ -123,7 +123,7 @@ SacarProgramas().then(response=>{BuscarCanal(response[buscar]).then(response =>{
 
 //imdb
 
-const nombre = "avatar"
+const nombre = "amores perro"
 
 async function BuscarImdb(film){
 
@@ -132,29 +132,42 @@ async function BuscarImdb(film){
 
     axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
         headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
-    }).then(response=>{
+    })
+    .then(response=>{
         const html = response.data
         const $ = cheerio.load(html)
 
         $(".ipc-metadata-list-summary-item__t",html).each(function(){
             let peliculaUrl = $(this).text().trim()
-            if(peliculaUrl.toLowerCase()==film.toLowerCase().trim()){
-                
-                filtro.push(peliculaUrl="https://www.imdb.com/"+$(this).attr("href"))
-                resultado = filtro
+            filtro.push(peliculaUrl="https://www.imdb.com/"+$(this).attr("href"))
+            resultado = filtro
 
                 
-            }
+           
             
+        })
+        return resultado
+    }).then(response=>{
+        axios(response[0],{ 
+            headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
+        }).then(response=>{
+            html = response.data
+            pepe= cheerio.load(html)
+            pepe(".sc-7ab21ed2-1",html).each(function(){
+                const puntuacion = pepe(this).text()
+                console.log(puntuacion)
+            })
+            
+
         })
     })
 
-    await sleep(1000)
-    return resultado
+    
+    
 
 }
 
-BuscarImdb(nombre).then(response=>{console.log(response)})
+BuscarImdb(nombre)
 
 
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
