@@ -134,7 +134,7 @@ SacarCanales()
 //imdb
 
 
-const nombre = "good will hunting"
+const nombre = "el viaje de chi"
 
 async function BuscarImdb(film){
 
@@ -178,7 +178,7 @@ async function BuscarImdb(film){
 
 }
 
-
+BuscarImdb(nombre)
 
 
 App.listen(8000, ()=>{console.log("Listening to port 8000")})
