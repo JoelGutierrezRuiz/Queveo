@@ -17,9 +17,7 @@ const nombre = "el viaje de chi"
     let resultado = null
     const filtro = []
 
-    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
-        headers: { Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
-    })
+    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`)
     .then(response=>{
         const html = response.data
         const $ = cheerio.load(html)
