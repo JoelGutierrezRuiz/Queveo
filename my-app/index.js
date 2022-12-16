@@ -3,6 +3,7 @@ const axios = require("axios")
 const express = require("express")
 const cheerio = require("cheerio");
 const util = require("util");
+const { response } = require("express");
 const sleep = util.promisify(setTimeout)
 //imports
 const App = express();
@@ -141,44 +142,48 @@ async function BuscarImdb(film){
     let resultado = null
     const filtro = []
 
-    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
+    let imdbRate = null
+
+    const filmPAge = await axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
         headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
     })
-    .then(response=>{
-        const html = response.data
-        const $ = cheerio.load(html)
 
-        $(".ipc-metadata-list-summary-item__t",html).each(function(){
-            let peliculaUrl = $(this).text().trim()
-            filtro.push(peliculaUrl="https://www.imdb.com/"+$(this).attr("href"))
-            resultado = filtro
+    const htmlFilm = filmPAge.data
+    const $ = cheerio.load(htmlFilm)
 
-                
-           
-            
-        })
-        return resultado
-    }).then(response=>{
-        axios(response[0],{ 
-            headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
-        }).then(response=>{
-            html = response.data
-            pepe= cheerio.load(html)
-            pepe(".sc-7ab21ed2-1",html).each(function(){
-                const puntuacion = pepe(this).text()
-                console.log(puntuacion)
-            })
-            
-
-        })
+    $(".ipc-metadata-list-summary-item__t",htmlFilm).each(function(){
+        let peliculaUrl = $(this).text().trim()
+        filtro.push(peliculaUrl="https://www.imdb.com/"+$(this).attr("href"))
+        resultado = filtro
     })
 
+    sleep(200)
+
+    const ratePage = await axios(resultado[0],{ 
+        headers: { "Accept-Encoding": "gzip,deflate,compress",Host:"www.imdb.com", "User-Agent":"Mozilla/5.0 (Macintosh; Intel)" } 
+    })
+    htmlRate = ratePage.data
+    pepe= cheerio.load(htmlRate)
+
+    pepe(".sc-7ab21ed2-1",htmlRate).each(function(){
+        const puntuacion = pepe(this).text()
+        imdbRate= puntuacion
+
+    })
+            
+    return imdbRate
+    
     
     
 
 }
 
-BuscarImdb(nombre)
 
+App.get("/",(req,res)=>{
+    BuscarImdb(nombre).then(response=>{res.send(response)})
+
+})
+
+App.listen(3000)
 
 //const puntuacion = $(this).find(".sc-7ab21ed2-1").text()
