@@ -5,19 +5,20 @@ import BestRank from './Components/BestRank'
 
 import axios from "axios"
 import cheerio from "cheerio";
-
 function App() {
   //imdb
 
 
 const nombre = "el viaje de chi"
 
- const BuscarImdb= async(film)=>{
+const BuscarImdb= async(film)=>{
 
     let resultado = null
     const filtro = []
 
-    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`)
+    axios(`https://www.imdb.com/find?q=${film}&ref_=nv_sr_sm`,{ 
+        headers: { "Access-Control-Allow-Origin":"https://queveo-buiselip0-joelgutierrezruiz.vercel.app/"} 
+    })
     .then(response=>{
         const html = response.data
         const $ = cheerio.load(html)
@@ -34,9 +35,7 @@ const nombre = "el viaje de chi"
         return resultado
     }).then(response=>{
         axios(response[0],{ 
-            headers: { "Accept-Encoding": "gzip,deflate,compress","Accept": "application/json","Authorization": "Bearer","Origin":" http://localhost:4200",
-            "Referer": "http://localhost:4200/matches",
-            "User-Agent":" Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36" } 
+            headers: {"Access-Control-Allow-Origin":"https://queveo-buiselip0-joelgutierrezruiz.vercel.app/" } 
         }).then(response=>{
             html = response.data
             pepe= cheerio.load(html)
