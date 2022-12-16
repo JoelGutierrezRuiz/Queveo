@@ -181,6 +181,4 @@ async function BuscarImdb(film){
 BuscarImdb(nombre)
 
 
-App.listen(8000, ()=>{console.log("Listening to port 8000")})
-
 //const puntuacion = $(this).find(".sc-7ab21ed2-1").text()
