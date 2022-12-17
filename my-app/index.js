@@ -209,7 +209,7 @@ BuscarImdb(nombre)
 
 App.get("/",(req,res)=>{
     
-    SacarTodosProgramas().then(response=>{res.send(response)})
+    BuscarProgramas().then(response=>{res.send(response)})
 
 })
 
