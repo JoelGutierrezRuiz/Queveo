@@ -149,14 +149,13 @@ async function BuscarProgramas (){
         }catch{}
         
     })
-    await sleep(40000)
+    await sleep(65000)
     return programas
 }
 
 
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
-BuscarProgramas().then(response=>{console.log(response.length)})
 
 
 
@@ -210,6 +209,7 @@ BuscarImdb(nombre)
 
 App.get("/",(req,res)=>{
     
+    SacarTodosProgramas().then(response=>{res.send(response)})
 
 })
 
