@@ -153,7 +153,7 @@ async function BuscarProgramas (){
     return programas
 }
 
-const estosies = BuscarProgramas()
+App.locals.data = BuscarProgramas();
 
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
@@ -210,7 +210,7 @@ BuscarImdb(nombre)
 
 App.get("/",(req,res)=>{
     
-    res.send(estosies)
+    res.send(App.locals.data)
 
 })
 
