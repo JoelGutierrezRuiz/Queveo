@@ -82,12 +82,13 @@ async function SacarTodosProgramas(){
     const canales = await SacarEnlaces() 
     const programas = [] 
     canales.map(canal=>{
+        const channel = canal[0]
         const html = canal[1]
         const $ = cheerio.load(html)
     
         $(".channel-programs-title a",html).each(function(){
             const title = "https://www.tvguia.es"+$(this).attr("href")
-            programas.push(title)
+            programas.push([channel,title])
 
         })
 
@@ -124,12 +125,12 @@ async function BuscarCanal (busquedaHtml){
 }
 
 async function BuscarProgramas (){
-    const programas = []
+    const canales = {}
     const programasList=await SacarTodosProgramas()
     programasList.map(async programa=>{
-        
+        const program = []
         try{
-        const response =await axios(programa,{ 
+        const response =await axios(programa[1],{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         })
 
@@ -141,8 +142,8 @@ async function BuscarProgramas (){
             //const categoria = $(this).find(".tvprogram").text()
             //const hora = $(this).find(".program-hour").text()
             //const sipnosis = $(this).find(".program-element p").text()
-
-            titulo.trim()?programas.push(titulo):null
+            titulo.trim()?program.push(titulo):null
+            canales[programa[0]]=program
 
 
         })
@@ -150,10 +151,14 @@ async function BuscarProgramas (){
         
     })
     await sleep(65000)
-    return programas
+    return canales
 }
 
-App.locals.data = BuscarProgramas();
+
+
+BuscarProgramas().then(response=>{console.log(response['calle 13'])})
+
+
 
 //Una vez guarda la lista de de canales vamos a buscar su programación 
 
@@ -210,7 +215,6 @@ BuscarImdb(nombre)
 
 App.get("/",(req,res)=>{
     
-    res.send(App.locals.data)
 
 })
 
