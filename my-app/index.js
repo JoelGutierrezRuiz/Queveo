@@ -96,7 +96,7 @@ async function SacarTodosProgramas(){
             
     })
 
-    sleep(2000)
+    sleep(1500)
     return programas
 
 }
@@ -116,7 +116,7 @@ async function BuscarCanal (busquedaHtml){
         programas.push(title)
 
     })
-
+    sleep(3000)
     return programas
 
     }catch{console.log("Este canal no existe")}
@@ -128,12 +128,12 @@ async function BuscarProgramas (){
     const canales = {}
     const programasList=await SacarTodosProgramas()
     programasList.map(async programa=>{
-        const program = []
+        
         try{
         const response =await axios(programa[1],{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         })
-
+        const program = []
         const html = response.data
         $ = cheerio.load(html)
 
@@ -147,6 +147,9 @@ async function BuscarProgramas (){
 
 
         })
+        
+        
+        
         }catch{}
         
     })
@@ -156,7 +159,7 @@ async function BuscarProgramas (){
 
 
 
-BuscarProgramas().then(response=>{console.log(response['calle 13'])})
+BuscarProgramas().then(response=>{console.log(response)})
 
 
 
