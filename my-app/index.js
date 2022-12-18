@@ -4,6 +4,7 @@ const express = require("express")
 const cheerio = require("cheerio");
 const util = require("util");
 const { response } = require("express");
+const { channel } = require("diagnostics_channel");
 const sleep = util.promisify(setTimeout)
 //imports
 const App = express();
@@ -81,10 +82,12 @@ async function SacarEnlaces(){
 async function SacarTodosProgramas(){
     const canales = await SacarEnlaces() 
     const programas = [] 
+    const todosLosCanales = {}
     canales.map(canal=>{
         const channel = canal[0]
         const html = canal[1]
         const $ = cheerio.load(html)
+        todosLosCanales[channel] = []
     
         $(".channel-programs-title a",html).each(function(){
             const title = "https://www.tvguia.es"+$(this).attr("href")
@@ -97,6 +100,7 @@ async function SacarTodosProgramas(){
     })
 
     sleep(1500)
+    programas.push(todosLosCanales)
     return programas
 
 }
@@ -126,14 +130,16 @@ async function BuscarCanal (busquedaHtml){
 
 async function BuscarProgramas (){
     const canales = {}
+    let program = []
+    
     const programasList=await SacarTodosProgramas()
+    const listaFinal = programasList[programasList.length-1]
     programasList.map(async programa=>{
         
         try{
         const response =await axios(programa[1],{ 
             headers: { "Accept-Encoding": "gzip,deflate,compress" } 
         })
-        const program = []
         const html = response.data
         $ = cheerio.load(html)
 
@@ -142,8 +148,7 @@ async function BuscarProgramas (){
             //const categoria = $(this).find(".tvprogram").text()
             //const hora = $(this).find(".program-hour").text()
             //const sipnosis = $(this).find(".program-element p").text()
-            titulo.trim()?program.push(titulo):null
-            canales[programa[0]]=program
+            titulo.trim()?listaFinal[programa[0]].push(titulo):null
 
 
         })
@@ -154,12 +159,12 @@ async function BuscarProgramas (){
         
     })
     await sleep(65000)
-    return canales
+    return listaFinal
 }
 
 
 
-BuscarProgramas().then(response=>{console.log(response)})
+BuscarProgramas().then(response=>{console.log(response['cosmo'].length)})
 
 
 
